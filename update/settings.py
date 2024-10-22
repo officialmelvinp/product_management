@@ -69,14 +69,29 @@ WSGI_APPLICATION = 'update.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('DATABASE_NAME'),
-        'USER': config('DATABASE_USER'),
-        'PASSWORD': config('DATABASE_PASSWORD'),
-        'HOST': 'localhost',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'd8dn776m8suflt',
+        'USER': 'uehs7vmk9rn814',
+        'PASSWORD': 'pbbd195183f2f74497dc2fc25b06107a118020dd360dfa26420668c40c6dd033a',
+        'HOST': 'c6sfjnr30ch74e.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com',
         'PORT': '5432',
     }
 }
+
+
+
+
+
+# # DATABASES = {
+# #     'default': {
+# #         'ENGINE': 'django.db.backends.postgresql',
+# #         'NAME': config('DATABASE_NAME'),
+# #         'USER': config('DATABASE_USER'),
+# #         'PASSWORD': config('DATABASE_PASSWORD'),
+# #         'HOST': 'localhost',
+# #         'PORT': '5432',
+#     }
+# }
 
 
 # DATABASES = {
