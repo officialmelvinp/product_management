@@ -1,41 +1,42 @@
-from django.test import TestCase
-from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 from .models import Product
 
 class ProductTests(APITestCase):
-    
-    # Test for creating a new product
-    def test_create_product(self):
-        url = reverse('product-list')
-        data = {'name': 'Product 1'}
-        response = self.client.post(url, data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(Product.objects.count(), 1)
-        self.assertEqual(Product.objects.get().name, 'Product 1')
-    
-    # Test for retrieving a product by ID
-    def test_retrieve_product(self):
-        product = Product.objects.create(name="Product 1")
-        url = reverse('product-detail', kwargs={'pk': product.id})
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['name'], 'Product 1')
 
-    # Test for updating a product by ID
-    def test_update_product(self):
-        product = Product.objects.create(name="Product 1")
-        url = reverse('product-detail', kwargs={'pk': product.id})
+    def setUp(self):
+        self.product = Product.objects.create(name="Sample Product")
+
+    # Test updating a product by name
+    def test_update_product_by_name(self):
+        url = '/api/products/update/name/?name=Sample Product'
         data = {'name': 'Updated Product'}
         response = self.client.put(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(Product.objects.get().name, 'Updated Product')
+        self.product.refresh_from_db()
+        self.assertEqual(self.product.name, 'Updated Product')
 
-    # Test for deleting a product by ID
-    def test_delete_product(self):
-        product = Product.objects.create(name="Product 1")
-        url = reverse('product-detail', kwargs={'pk': product.id})
+    # Test deleting a product by name
+    def test_delete_product_by_name(self):
+        url = '/api/products/delete/name/?name=Sample Product'
         response = self.client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        self.assertEqual(Product.objects.count(), 0)
+        with self.assertRaises(Product.DoesNotExist):
+            Product.objects.get(name="Sample Product")
+
+    # Test updating a product by ID
+    def test_update_product(self):
+        url = f'/api/products/update/id/{self.product.pk}/'
+        data = {'name': 'Updated Sample Product'}
+        response = self.client.put(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.product.refresh_from_db()
+        self.assertEqual(self.product.name, 'Updated Sample Product')
+
+    # Test deleting a product by ID
+    def test_delete_product(self):
+        url = f'/api/products/delete/id/{self.product.pk}/'  # Update the URL
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        with self.assertRaises(Product.DoesNotExist):
+            Product.objects.get(pk=self.product.pk)
