@@ -1,3 +1,4 @@
+import os
 from decouple import Csv, config
 from pathlib import Path
 
@@ -40,6 +41,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'update.urls'
@@ -70,13 +72,15 @@ WSGI_APPLICATION = 'update.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'd8dn776m8suflt',
-        'USER': 'uehs7vmk9rn814',
-        'PASSWORD': 'pbbd195183f2f74497dc2fc25b06107a118020dd360dfa26420668c40c6dd033a',
-        'HOST': 'c6sfjnr30ch74e.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com',
-        'PORT': '5432',
+        'NAME': config('DATABASE_NAME'),  # Set this in your .env file
+        'USER': config('DATABASE_USER'),  # Set this in your .env file
+        'PASSWORD': config('DATABASE_PASSWORD'),  # Set this in your .env file
+        'HOST': config('DATABASE_HOST', default='localhost'),  # Use default if not set
+        'PORT': config('DATABASE_PORT', default='5432'),  # Use default if not set
     }
 }
+
+
 
 
 
@@ -136,7 +140,17 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_URL = '/static/'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),  # A directory for shared static files
+    #os.path.join(BASE_DIR, 'assets'),   # Another directory for different static files
+]
+
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
