@@ -9,7 +9,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 SECRET_KEY = config('SECRET_KEY', cast=str)
 DEBUG = config("DEBUG", cast=bool)  # Ensure you set this to False in production
-ALLOWED_HOSTS = config("ALLOWED_HOSTS", cast=str).split(',') + ['product-management-app-api.herokuapp.com', 'localhost']
+ALLOWED_HOSTS = '127.0.0.1','localhost','product-management-app-api.herokuapp.com',
 
 
 # Application definition
@@ -23,6 +23,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'product',
 ]
+
+WSGI_APPLICATION = 'update.wsgi.application'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
