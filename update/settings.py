@@ -9,7 +9,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 SECRET_KEY = config('SECRET_KEY', cast=str)
 DEBUG = config("DEBUG", cast=bool)  # Ensure you set this to False in production
-ALLOWED_HOSTS = config("ALLOWED_HOSTS", cast=str).split(',')
+ALLOWED_HOSTS = config("ALLOWED_HOSTS", cast=str).split(',') + ['product-management-app-api.herokuapp.com', 'localhost']
+
 
 # Application definition
 INSTALLED_APPS = [
